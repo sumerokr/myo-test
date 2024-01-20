@@ -1,0 +1,42 @@
+<script setup lang="ts">
+type Props = {
+  isPending?: boolean;
+};
+
+defineProps<Props>();
+</script>
+
+<template>
+  <button
+    class="relative gap-x-2 border-2 border-slate-200 rounded-xl py-2 px-4 bg-white hover:bg-slate-200/30 active:bg-slate-200/60 overflow-hidden"
+  >
+    <Transition name="fade">
+      <span
+        v-if="isPending"
+        class="absolute inset-0 transition-opacity ease-linear backdrop-blur-[2px] bg-white/50 grid place-items-center"
+      >
+        <svg
+          class="animate-spin"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="currentColor"
+            d="M12 22q-2.05 0-3.875-.788t-3.187-2.15q-1.363-1.362-2.15-3.187T2 12q0-2.075.788-3.887t2.15-3.175Q6.3 3.575 8.124 2.788T12 2q.425 0 .713.288T13 3q0 .425-.288.713T12 4Q8.675 4 6.337 6.338T4 12q0 3.325 2.338 5.663T12 20q3.325 0 5.663-2.337T20 12q0-.425.288-.712T21 11q.425 0 .713.288T22 12q0 2.05-.788 3.875t-2.15 3.188q-1.362 1.362-3.175 2.15T12 22"
+          />
+        </svg>
+      </span>
+    </Transition>
+
+    <slot />
+  </button>
+</template>
+
+<style scoped>
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
