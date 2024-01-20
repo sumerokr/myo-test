@@ -17,7 +17,7 @@ const composeFullName = (user: User) => `${user.profile.firstName} ${user.profil
 
 <template>
   <div
-    class="flex gap-x-4 border-2 border-slate-200 rounded-xl bg-white overflow-hidden"
+    class="flex gap-x-4 border-2 border-slate-200 rounded-xl bg-white transition-shadow hover:shadow-md overflow-hidden"
     data-testid="user-card"
   >
     <p class="flex-shrink-0">
