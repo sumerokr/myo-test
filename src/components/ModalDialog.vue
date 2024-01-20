@@ -16,7 +16,7 @@ onUnmounted(() => {
 
 <template>
   <div
-    class="fixed z-50 inset-0 -top-2 flex items-center justify-center bg-black/20 overflow-auto"
+    class="fixed z-50 inset-0 -top-2 flex items-center justify-center backdrop-blur-[2px] bg-black/20 overflow-auto"
     @click.self="emit('close')"
   >
     <div
