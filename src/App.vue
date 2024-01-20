@@ -44,12 +44,12 @@ const {
   data: createdUser,
   execute: createUser,
   post: setCreatePayload,
-  onFetchResponse: onUserCreate,
+  onFetchResponse: onUserCreated,
 } = useFetch(() => 'https://65a7b87994c2c5762da76352.mockapi.io/api/users/', {
   immediate: false,
 }).json<User>();
 
-const onCreate = async (userData: UserDraft) => {
+const handleUserCreate = async (userData: UserDraft) => {
   if (isCreating.value) {
     return;
   }
@@ -58,7 +58,7 @@ const onCreate = async (userData: UserDraft) => {
   await createUser();
 };
 
-onUserCreate(() => {
+onUserCreated(() => {
   if (!users.value || !createdUser.value) return;
   users.value = users.value.concat(createdUser.value);
   isCreateFormVisible.value = false;
@@ -74,7 +74,7 @@ const {
   data: updatedUser,
   execute: updateUser,
   put: setUpdatePayload,
-  onFetchResponse: onUserUpdate,
+  onFetchResponse: onUserUpdated,
 } = useFetch(
   () => `https://65a7b87994c2c5762da76352.mockapi.io/api/users/${userToEdit.value?.id}`,
   {
@@ -82,7 +82,7 @@ const {
   }
 ).json<User>();
 
-const onUpdate = async (userData: User) => {
+const handleUserUpdate = async (userData: User) => {
   if (isUpdating.value) {
     return;
   }
@@ -91,7 +91,7 @@ const onUpdate = async (userData: User) => {
   await updateUser();
 };
 
-onUserUpdate(() => {
+onUserUpdated(() => {
   if (!users.value || !updatedUser.value) return;
   users.value = users.value.map((user): User => {
     if (user.id === updatedUser.value?.id) {
@@ -111,7 +111,7 @@ const {
   isFetching: isDeleting,
   error: deleteError,
   execute: deleteUser,
-  onFetchResponse: onUserDelete,
+  onFetchResponse: onUserDeleted,
 } = useFetch(
   () => `https://65a7b87994c2c5762da76352.mockapi.io/api/users/${userToDelete.value?.id}`,
   {
@@ -121,7 +121,7 @@ const {
   .delete()
   .json<User>();
 
-const onDelete = async () => {
+const handleUserDelete = async () => {
   if (isDeleting.value) {
     return;
   }
@@ -129,7 +129,7 @@ const onDelete = async () => {
   await deleteUser();
 };
 
-onUserDelete(() => {
+onUserDeleted(() => {
   if (!users.value || !userToDelete.value) return;
   users.value = users.value!.filter((user) => user.id !== userToDelete.value?.id);
   userToDelete.value = null;
@@ -167,7 +167,7 @@ onUserDelete(() => {
               :user="userToEdit"
               :is-updating="isUpdating"
               :updating-error="updatingError"
-              @submit="onUpdate"
+              @submit="handleUserUpdate"
               @cancel="userToEdit = null"
             />
           </ModalDialog>
@@ -181,7 +181,7 @@ onUserDelete(() => {
               :user="userToDelete"
               :is-deleting="isDeleting"
               :deleting-error="deleteError"
-              @confirm="onDelete"
+              @confirm="handleUserDelete"
               @cancel="userToDelete = null"
             />
           </ModalDialog>
@@ -200,7 +200,7 @@ onUserDelete(() => {
           <CreateUserForm
             :is-creating="isCreating"
             :creating-error="creatingError"
-            @submit="onCreate"
+            @submit="handleUserCreate"
             @cancel="isCreateFormVisible = false"
           />
         </ModalDialog>
