@@ -1,5 +1,7 @@
 import type { User, UserDraft } from '@/types';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 export const usersAPI: {
   getUsers: () => Promise<User[]>;
   createUser: (userData: UserDraft) => Promise<User>;
@@ -7,11 +9,11 @@ export const usersAPI: {
   deleteUser: (userId: string) => Promise<User>;
 } = {
   getUsers: async () => {
-    const response = await fetch('https://65a7b87994c2c5762da76352.mockapi.io/api/users');
+    const response = await fetch(baseUrl);
     return response.json();
   },
   createUser: async (userData) => {
-    const response = await fetch('https://65a7b87994c2c5762da76352.mockapi.io/api/users', {
+    const response = await fetch(baseUrl, {
       method: 'POST',
       body: JSON.stringify(userData),
       headers: {
@@ -21,20 +23,17 @@ export const usersAPI: {
     return response.json();
   },
   updateUser: async (user) => {
-    const response = await fetch(
-      `https://65a7b87994c2c5762da76352.mockapi.io/api/users/${user.id}`,
-      {
-        method: 'PUT',
-        body: JSON.stringify(user),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch(`${baseUrl}/${user.id}`, {
+      method: 'PUT',
+      body: JSON.stringify(user),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     return response.json();
   },
   deleteUser: async (id) => {
-    const response = await fetch(`https://65a7b87994c2c5762da76352.mockapi.io/api/users/${id}`, {
+    const response = await fetch(`${baseUrl}/${id}`, {
       method: 'DELETE',
     });
     return response.json();

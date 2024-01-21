@@ -46,7 +46,7 @@ test('renders spinner while users are loading', async ({ page }) => {
   await page.route('**/api/users', async (route) => {
     // TODO: make it better
     // immediate response will not show spinner, since Vue has no time to render it
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 300));
     return route.fulfill({
       status: 200,
       json: [],
