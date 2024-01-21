@@ -23,6 +23,7 @@ defineEmits<{
   <div class="flex justify-between">
     <TheButton type="button" @click="$emit('cancel')">Cancel</TheButton>
     <TheButton
+      class="border-red-200"
       type="button"
       :is-loading="isLoading"
       data-testid="delete-confirmation-submit"

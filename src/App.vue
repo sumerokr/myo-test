@@ -175,23 +175,4 @@ const handleUserDelete = async (id: User['id']) => {
 ._minmax {
   grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
 }
-
-.fade-enter-active {
-  transition-timing-function: ease-out;
-}
-.fade-leave-active {
-  transition-timing-function: ease-in;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition-property: transform, opacity;
-  transition-duration: 0.15s;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  transform: translateY(0.5rem);
-  opacity: 0;
-}
 </style>

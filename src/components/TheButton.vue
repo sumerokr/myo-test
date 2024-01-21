@@ -33,10 +33,3 @@ defineProps<Props>();
     <slot />
   </button>
 </template>
-
-<style scoped>
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>

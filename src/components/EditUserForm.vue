@@ -97,7 +97,11 @@ const formatDate = (date: string) =>
 
     <div class="flex justify-between">
       <TheButton type="button" @click="$emit('cancel')">Cancel</TheButton>
-      <TheButton type="submit" :is-loading="isLoading" data-testid="edit-form-submit"
+      <TheButton
+        class="border-sky-200"
+        type="submit"
+        :is-loading="isLoading"
+        data-testid="edit-form-submit"
         >Save</TheButton
       >
     </div>
