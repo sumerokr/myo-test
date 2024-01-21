@@ -38,7 +38,7 @@ const composeFullName = (user: User) => `${user.profile.firstName} ${user.profil
 
     <div class="flex flex-col border-l border-slate-200 divide-y divide-slate-200">
       <button
-        class="flex-1 w-9 bg-white hover:bg-slate-200/30 active:bg-slate-200/60"
+        class="flex-1 w-9 bg-white transition-colors hover:bg-slate-200/30 active:bg-slate-200/60"
         type="button"
         @click="$emit('edit')"
         title="edit"
@@ -59,7 +59,7 @@ const composeFullName = (user: User) => `${user.profile.firstName} ${user.profil
         <span class="sr-only">Edit</span>
       </button>
       <button
-        class="flex-1 w-9 bg-white hover:bg-slate-200/30 active:bg-slate-200/60"
+        class="flex-1 w-9 bg-white transition-colors hover:bg-slate-200/30 active:bg-slate-200/60"
         type="button"
         @click="$emit('delete')"
         title="delete"

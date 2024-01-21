@@ -55,7 +55,7 @@ test('renders spinner while users are loading', async ({ page }) => {
 
   await page.goto('/');
 
-  await expect(page.getByTestId('get-users-fetching')).toBeVisible();
+  await expect(page.getByTestId('get-users-loading')).toBeVisible();
 });
 
 test('renders error when cannot fetch users', async ({ page }) => {
@@ -99,7 +99,7 @@ test('shows edit popup when user is being edited', async ({ page }) => {
   await page.goto('/');
   await page.getByTestId('edit-user').first().click();
 
-  await expect(page.getByTestId('edit-popup')).toBeVisible();
+  await expect(page.getByTestId('edit-form')).toBeVisible();
 });
 
 test('does not submit the form, when username is missing', async ({ page }) => {
@@ -108,7 +108,7 @@ test('does not submit the form, when username is missing', async ({ page }) => {
   await page.getByTestId('edit-form').getByLabel('username').fill('');
   await page.getByTestId('edit-form-submit').click();
 
-  await expect(page.getByTestId('edit-popup')).toBeVisible();
+  await expect(page.getByTestId('edit-form')).toBeVisible();
 });
 
 test('shows error when cannot update a user', async ({ page }) => {

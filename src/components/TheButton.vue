@@ -1,6 +1,6 @@
 <script setup lang="ts">
 type Props = {
-  isPending?: boolean;
+  isLoading?: boolean;
 };
 
 defineProps<Props>();
@@ -8,11 +8,11 @@ defineProps<Props>();
 
 <template>
   <button
-    class="relative gap-x-2 border-2 border-slate-200 rounded-xl py-2 px-4 bg-white hover:bg-slate-200/30 active:bg-slate-200/60 overflow-hidden"
+    class="relative gap-x-2 border-2 border-slate-200 rounded-xl py-2 px-4 bg-white transition-colors hover:bg-slate-200/30 active:bg-slate-200/60 overflow-hidden"
   >
     <Transition name="fade">
       <span
-        v-if="isPending"
+        v-if="isLoading"
         class="absolute inset-0 transition-opacity ease-linear backdrop-blur-[2px] bg-white/50 grid place-items-center"
       >
         <svg

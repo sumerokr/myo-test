@@ -5,8 +5,8 @@ import TheButton from './TheButton.vue';
 
 type Props = {
   user: User;
-  isUpdating: boolean;
-  updatingError: unknown;
+  isLoading: boolean;
+  error: unknown;
 };
 
 const props = defineProps<Props>();
@@ -21,8 +21,8 @@ const localUser = ref(structuredClone(toRaw(props.user)));
 // formats the date into human-readable format based on the user's locale
 const formatDate = (date: string) =>
   new Intl.DateTimeFormat(navigator.language, {
-    dateStyle: 'long',
-    timeStyle: 'long',
+    dateStyle: 'short',
+    timeStyle: 'short',
   }).format(new Date(date));
 </script>
 
@@ -79,6 +79,7 @@ const formatDate = (date: string) =>
         v-model="localUser.profile.avatar"
         type="url"
         id="avatar"
+        placeholder="https://"
         required
       />
     </div>
@@ -96,13 +97,13 @@ const formatDate = (date: string) =>
 
     <div class="flex justify-between">
       <TheButton type="button" @click="$emit('cancel')">Cancel</TheButton>
-      <TheButton :is-pending="isUpdating" type="submit" data-testid="edit-form-submit"
+      <TheButton type="submit" :is-loading="isLoading" data-testid="edit-form-submit"
         >Save</TheButton
       >
     </div>
 
-    <div class="text-red-500" v-if="updatingError" data-testid="edit-form-error">
-      {{ updatingError }}
+    <div class="text-red-500" v-if="error" data-testid="edit-form-error">
+      {{ error }}
     </div>
   </form>
 </template>

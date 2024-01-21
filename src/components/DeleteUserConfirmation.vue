@@ -4,8 +4,8 @@ import TheButton from './TheButton.vue';
 
 type Props = {
   user: User;
-  isDeleting: boolean;
-  deletingError: unknown;
+  isLoading: boolean;
+  error: unknown;
 };
 
 defineProps<Props>();
@@ -23,13 +23,14 @@ defineEmits<{
   <div class="flex justify-between">
     <TheButton type="button" @click="$emit('cancel')">Cancel</TheButton>
     <TheButton
-      @click="$emit('confirm')"
-      :is-pending="isDeleting"
+      type="button"
+      :is-loading="isLoading"
       data-testid="delete-confirmation-submit"
+      @click="$emit('confirm')"
     >
       Delete
     </TheButton>
   </div>
 
-  <div class="text-red-500" v-if="deletingError">{{ deletingError }}</div>
+  <div class="text-red-500" v-if="error">{{ error }}</div>
 </template>

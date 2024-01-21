@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useFetch, refDebounced } from '@vueuse/core';
+import { refDebounced } from '@vueuse/core';
 import type { User, UserDraft } from '@/types';
 import ModalDialog from '@/components/ModalDialog.vue';
 import EditUserForm from '@/components/EditUserForm.vue';
@@ -8,12 +8,25 @@ import CreateUserForm from '@/components/CreateUserForm.vue';
 import DeleteUserConfirmation from '@/components/DeleteUserConfirmation.vue';
 import UserCard from '@/components/UserCard.vue';
 import TheButton from '@/components/TheButton.vue';
+import { useUsers } from '@/composables/use-users';
 
 const {
-  isFetching,
-  error,
-  data: users,
-} = useFetch('https://65a7b87994c2c5762da76352.mockapi.io/api/users').get().json<User[]>();
+  users,
+  getUsersLoading,
+  getUsersError,
+
+  createUserLoading,
+  createUserError,
+  createUser,
+
+  updateUserLoading,
+  updateUserError,
+  updateUser,
+
+  deleteUserLoading,
+  deleteUserError,
+  deleteUser,
+} = useUsers();
 
 //#region search
 const searchQuery = ref('');
@@ -38,102 +51,34 @@ const filteredUsers = computed(() => {
 //#region create
 const isCreateFormVisible = ref(false);
 
-const {
-  isFetching: isCreating,
-  error: creatingError,
-  data: createdUser,
-  execute: createUser,
-  post: setCreatePayload,
-  onFetchResponse: onUserCreated,
-} = useFetch(() => 'https://65a7b87994c2c5762da76352.mockapi.io/api/users/', {
-  immediate: false,
-}).json<User>();
-
 const handleUserCreate = async (userData: UserDraft) => {
-  if (isCreating.value) {
-    return;
+  await createUser(userData);
+  if (!createUserError.value) {
+    isCreateFormVisible.value = false;
   }
-
-  setCreatePayload(userData);
-  await createUser();
 };
-
-onUserCreated(() => {
-  if (!users.value || !createdUser.value) return;
-  users.value = users.value.concat(createdUser.value);
-  isCreateFormVisible.value = false;
-});
 //#endregion create
 
 //#region edit
 const userToEdit = ref<User | null>(null);
 
-const {
-  isFetching: isUpdating,
-  error: updatingError,
-  data: updatedUser,
-  execute: updateUser,
-  put: setUpdatePayload,
-  onFetchResponse: onUserUpdated,
-} = useFetch(
-  () => `https://65a7b87994c2c5762da76352.mockapi.io/api/users/${userToEdit.value?.id}`,
-  {
-    immediate: false,
+const handleUserUpdate = async (user: User) => {
+  await updateUser(user);
+  if (!updateUserError.value) {
+    userToEdit.value = null;
   }
-).json<User>();
-
-const handleUserUpdate = async (userData: User) => {
-  if (isUpdating.value) {
-    return;
-  }
-
-  setUpdatePayload(userData);
-  await updateUser();
 };
-
-onUserUpdated(() => {
-  if (!users.value || !updatedUser.value) return;
-  users.value = users.value.map((user): User => {
-    if (user.id === updatedUser.value?.id) {
-      return updatedUser.value;
-    }
-    return user;
-  });
-
-  userToEdit.value = null;
-});
 //#endregion edit
 
 //#region delete
 const userToDelete = ref<User | null>(null);
 
-const {
-  isFetching: isDeleting,
-  error: deleteError,
-  execute: deleteUser,
-  onFetchResponse: onUserDeleted,
-} = useFetch(
-  () => `https://65a7b87994c2c5762da76352.mockapi.io/api/users/${userToDelete.value?.id}`,
-  {
-    immediate: false,
+const handleUserDelete = async (id: User['id']) => {
+  await deleteUser(id);
+  if (!deleteUserError.value) {
+    userToDelete.value = null;
   }
-)
-  .delete()
-  .json<User>();
-
-const handleUserDelete = async () => {
-  if (isDeleting.value) {
-    return;
-  }
-
-  await deleteUser();
 };
-
-onUserDeleted(() => {
-  if (!users.value || !userToDelete.value) return;
-  users.value = users.value!.filter((user) => user.id !== userToDelete.value?.id);
-  userToDelete.value = null;
-});
 //#endregion delete
 </script>
 
@@ -162,11 +107,11 @@ onUserDeleted(() => {
 
       <Teleport to="body">
         <Transition name="fade">
-          <ModalDialog v-if="userToEdit" @close="userToEdit = null" data-testid="edit-popup">
+          <ModalDialog v-if="userToEdit" @close="userToEdit = null">
             <EditUserForm
               :user="userToEdit"
-              :is-updating="isUpdating"
-              :updating-error="updatingError"
+              :is-loading="updateUserLoading"
+              :error="updateUserError"
               @submit="handleUserUpdate"
               @cancel="userToEdit = null"
             />
@@ -179,9 +124,9 @@ onUserDeleted(() => {
           <ModalDialog v-if="userToDelete" @close="userToDelete = null">
             <DeleteUserConfirmation
               :user="userToDelete"
-              :is-deleting="isDeleting"
-              :deleting-error="deleteError"
-              @confirm="handleUserDelete"
+              :is-loading="deleteUserLoading"
+              :error="deleteUserError"
+              @confirm="handleUserDelete(userToDelete.id)"
               @cancel="userToDelete = null"
             />
           </ModalDialog>
@@ -198,8 +143,8 @@ onUserDeleted(() => {
       <Transition name="fade">
         <ModalDialog v-if="isCreateFormVisible" @close="isCreateFormVisible = false">
           <CreateUserForm
-            :is-creating="isCreating"
-            :creating-error="creatingError"
+            :is-loading="createUserLoading"
+            :error="createUserError"
             @submit="handleUserCreate"
             @cancel="isCreateFormVisible = false"
           />
@@ -208,7 +153,7 @@ onUserDeleted(() => {
     </Teleport>
   </div>
 
-  <div v-else-if="isFetching" class="flex justify-center" data-testid="get-users-fetching">
+  <div v-else-if="getUsersLoading" class="flex justify-center" data-testid="get-users-loading">
     <svg
       class="animate-spin"
       xmlns="http://www.w3.org/2000/svg"
@@ -223,7 +168,7 @@ onUserDeleted(() => {
     </svg>
   </div>
 
-  <div v-else-if="error" data-testid="get-users-error">{{ error }}</div>
+  <div v-else-if="getUsersError" data-testid="get-users-error">{{ getUsersError }}</div>
 </template>
 
 <style scoped>

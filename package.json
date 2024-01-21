@@ -16,6 +16,8 @@
   },
   "dependencies": {
     "@vueuse/core": "^10.7.2",
+    "@vueuse/integrations": "^10.7.2",
+    "focus-trap": "^7.5.4",
     "vue": "^3.3.11"
   },
   "devDependencies": {

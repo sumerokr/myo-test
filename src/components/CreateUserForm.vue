@@ -4,8 +4,8 @@ import type { UserDraft } from '@/types';
 import TheButton from '@/components/TheButton.vue';
 
 type Props = {
-  isCreating: boolean;
-  creatingError: unknown;
+  isLoading: boolean;
+  error: unknown;
 };
 
 defineProps<Props>();
@@ -67,17 +67,18 @@ const localUser = ref<UserDraft>({
         v-model="localUser.profile.avatar"
         type="url"
         id="avatar"
+        placeholder="https://"
         required
       />
     </div>
 
     <div class="flex justify-between">
       <TheButton type="button" @click="$emit('cancel')">Cancel</TheButton>
-      <TheButton type="submit">Save</TheButton>
+      <TheButton type="submit" :is-loading="isLoading">Save</TheButton>
     </div>
 
-    <div class="text-red-500" v-if="creatingError" data-testid="edit-form-error">
-      {{ creatingError }}
+    <div class="text-red-500" v-if="error">
+      {{ error }}
     </div>
   </form>
 </template>
