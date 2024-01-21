@@ -36,15 +36,15 @@ test.beforeEach(async ({ context }) => {
   });
 });
 
-test('creates Vue app', async ({ page }) => {
+test('Creates Vue app', async ({ page }) => {
   await page.goto('/');
 
   expect(await page.locator('#app > *').count()).toBeGreaterThan(0);
 });
 
-test('renders spinner while users are loading', async ({ page }) => {
+test('Renders spinner while loading users', async ({ page }) => {
   await page.route('**/api/users', async (route) => {
-    // TODO: make it better
+    // TODO: to be improved
     // immediate response will not show spinner, since Vue has no time to render it
     await new Promise((resolve) => setTimeout(resolve, 300));
     return route.fulfill({
@@ -58,7 +58,7 @@ test('renders spinner while users are loading', async ({ page }) => {
   await expect(page.getByTestId('get-users-loading')).toBeVisible();
 });
 
-test('renders error when cannot fetch users', async ({ page }) => {
+test('Renders error when unable to fetch users', async ({ page }) => {
   await page.route('**/api/users', (route, request) => {
     if (request.method() === 'GET') {
       return route.fulfill({
@@ -73,7 +73,7 @@ test('renders error when cannot fetch users', async ({ page }) => {
   await expect(page.getByTestId('get-users-error')).toBeVisible();
 });
 
-test('renders empty screen when user list is empty', async ({ page }) => {
+test('Renders empty screen message when the user list is empty', async ({ page }) => {
   await page.route('**/api/users', (route, request) => {
     if (request.method() === 'GET') {
       return route.fulfill({
@@ -89,20 +89,20 @@ test('renders empty screen when user list is empty', async ({ page }) => {
   await expect(page.getByTestId('empty-user-list')).toBeVisible();
 });
 
-test('renders user list when users are loaded', async ({ page }) => {
+test('Renders user list when users are loaded', async ({ page }) => {
   await page.goto('/');
 
   await expect(page.getByTestId('user-list')).toBeVisible();
 });
 
-test('shows edit popup when user is being edited', async ({ page }) => {
+test('Shows edit popup when editing a user', async ({ page }) => {
   await page.goto('/');
   await page.getByTestId('edit-user').first().click();
 
   await expect(page.getByTestId('edit-form')).toBeVisible();
 });
 
-test('does not submit the form, when username is missing', async ({ page }) => {
+test('Does not submit the form when the username is missing', async ({ page }) => {
   await page.goto('/');
   await page.getByTestId('edit-user').first().click();
   await page.getByTestId('edit-form').getByLabel('username').fill('');
@@ -111,7 +111,7 @@ test('does not submit the form, when username is missing', async ({ page }) => {
   await expect(page.getByTestId('edit-form')).toBeVisible();
 });
 
-test('shows error when cannot update a user', async ({ page }) => {
+test('Shows error when unable to update a user', async ({ page }) => {
   await page.route('**/api/users/**', (route, request) => {
     if (request.method() === 'PUT') {
       return route.fulfill({
@@ -128,7 +128,7 @@ test('shows error when cannot update a user', async ({ page }) => {
   await expect(page.getByTestId('edit-form-error')).toBeVisible();
 });
 
-test('applies changes to edited user', async ({ page }) => {
+test('Applies changes to the edited user', async ({ page }) => {
   const assertedUsername = 'new name';
 
   await page.route('**/api/users/**', (route, request) => {
@@ -152,7 +152,7 @@ test('applies changes to edited user', async ({ page }) => {
   await expect(page.getByTestId('username').first()).toHaveText(assertedUsername);
 });
 
-test('removes users from list', async ({ page }) => {
+test('Removes a user from the list', async ({ page }) => {
   const users = getUsers();
 
   await page.route('**/api/users/**', (route, request) => {

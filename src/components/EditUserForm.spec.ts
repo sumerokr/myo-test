@@ -15,27 +15,27 @@ const user = {
 };
 
 describe('EditUserForm', () => {
-  it('renders form', () => {
+  it('Renders the form', () => {
     const wrapper = mount(EditUserForm, { props: { user: user } });
 
     expect(wrapper.find('[data-testid="edit-form"]').exists()).toBe(true);
   });
 
-  it('renders user data', () => {
+  it('Renders user data', () => {
     const wrapper = mount(EditUserForm, { props: { user: user } });
 
     expect((wrapper.find('#id').element as HTMLInputElement).value).toBe(user.id);
     expect((wrapper.find('#username').element as HTMLInputElement).value).toBe(user.username);
   });
 
-  it('submits the same data if not edited', async () => {
+  it('Submits the same data if not edited', async () => {
     const wrapper = mount(EditUserForm, { props: { user: user } });
     await wrapper.find('[data-testid="edit-form"]').trigger('submit');
 
     expect(wrapper.emitted('submit')?.[0][0]).toEqual(user);
   });
 
-  it('submits the edited data when modified', async () => {
+  it('Submits the edited data when modified', async () => {
     const wrapper = mount(EditUserForm, { props: { user: user } });
     const assertedUsername = 'custom_username';
     await wrapper.find('#username').setValue(assertedUsername);
@@ -47,7 +47,7 @@ describe('EditUserForm', () => {
     });
   });
 
-  it('does not allow to modify id and createdAt fields', async () => {
+  it('Does not allow modification of id and createdAt fields', async () => {
     const wrapper = mount(EditUserForm, { props: { user: user } });
     await wrapper.find('#id').setValue('modified_id');
     await wrapper.find('#createdAt').setValue('modified_date');
@@ -56,13 +56,13 @@ describe('EditUserForm', () => {
     expect(wrapper.emitted('submit')?.[0][0]).toEqual(user);
   });
 
-  it('does not show error by default', async () => {
+  it('Does not show an error by default', async () => {
     const wrapper = mount(EditUserForm, { props: { user: user } });
 
     expect(wrapper.find('[data-testid="edit-form-error"]').exists()).toBe(false);
   });
 
-  it('shows error if any', async () => {
+  it('Shows an error if any', async () => {
     const assertedError = 'Something happened';
     const wrapper = mount(EditUserForm, { props: { user: user, error: assertedError } });
 

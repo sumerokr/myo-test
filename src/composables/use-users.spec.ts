@@ -32,12 +32,12 @@ describe('useUsers composable', () => {
     vi.resetAllMocks();
   });
 
-  it('sends GET request to fetch users as soon as executed', async () => {
+  it('Sends GET request to fetch users upon execution', async () => {
     useUsers();
     expect(mockedUsersAPI.getUsers).toHaveBeenCalled();
   });
 
-  it('adds created user to the existing ones', async () => {
+  it('Adds the created user to the existing ones', async () => {
     mockedUsersAPI.getUsers.mockReturnValueOnce([]);
     mockedUsersAPI.createUser.mockReturnValueOnce(user);
 
@@ -48,7 +48,7 @@ describe('useUsers composable', () => {
     expect(users.value).toEqual([user]);
   });
 
-  it('replaces existing user after successful API call', async () => {
+  it('Replaces an existing user after a successful API call', async () => {
     const updatedUser = {
       ...user,
       username: 'updatedOne',
@@ -63,7 +63,7 @@ describe('useUsers composable', () => {
     expect(users.value).toEqual([updatedUser]);
   });
 
-  it('receives and fullfill updateUserError when API call fail', async () => {
+  it('Receives and fulfills updateUserError variable when the API call fails', async () => {
     const updatedUser = {
       ...user,
       username: 'updatedOne',
