@@ -1,6 +1,6 @@
+import { usersAPI } from '@/api/users';
 import type { User, UserDraft } from '@/types';
 import { useAsyncState } from '@vueuse/core';
-import { usersAPI } from '@/api/users';
 
 export const useUsers = () => {
   //#region get

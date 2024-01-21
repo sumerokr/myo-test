@@ -1,4 +1,4 @@
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useUsers } from './use-users';
 
 const { usersAPI: mockedUsersAPI } = vi.hoisted(() => {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, nextTick, onMounted, onUnmounted } from 'vue';
-import { onClickOutside } from '@vueuse/core';
+import { onClickOutside, onKeyStroke } from '@vueuse/core';
 import { useFocusTrap } from '@vueuse/integrations/useFocusTrap';
+import { nextTick, onMounted, onUnmounted, ref } from 'vue';
 
 const emit = defineEmits<{
   close: [];
@@ -9,7 +9,11 @@ const emit = defineEmits<{
 
 const dialog = ref<HTMLElement | null>(null);
 const { activate, deactivate } = useFocusTrap(dialog);
+
 onClickOutside(dialog, () => emit('close'));
+onKeyStroke('Escape', () => {
+  emit('close');
+});
 
 onMounted(async () => {
   document.body.classList.add('overflow-hidden');

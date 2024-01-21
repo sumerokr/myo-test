@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { refDebounced } from '@vueuse/core';
-import type { User, UserDraft } from '@/types';
-import ModalDialog from '@/components/ModalDialog.vue';
-import EditUserForm from '@/components/EditUserForm.vue';
 import CreateUserForm from '@/components/CreateUserForm.vue';
 import DeleteUserConfirmation from '@/components/DeleteUserConfirmation.vue';
-import UserCard from '@/components/UserCard.vue';
+import EditUserForm from '@/components/EditUserForm.vue';
+import ModalDialog from '@/components/ModalDialog.vue';
 import TheButton from '@/components/TheButton.vue';
+import UserCard from '@/components/UserCard.vue';
 import { useUsers } from '@/composables/use-users';
+import type { User, UserDraft } from '@/types';
+import { refDebounced } from '@vueuse/core';
+import { computed, ref } from 'vue';
 
 const {
   users,
@@ -97,7 +97,9 @@ const handleUserDelete = async (id: User['id']) => {
     >
   </div>
 
+  <!-- at least empty array is returned from the API -->
   <div v-if="filteredUsers">
+    <!-- there are some users -->
     <template v-if="filteredUsers.length">
       <ul class="_minmax grid gap-4" data-testid="user-list">
         <li v-for="user in filteredUsers" :key="user.id">
@@ -134,23 +136,16 @@ const handleUserDelete = async (id: User['id']) => {
       </Teleport>
     </template>
 
+    <!-- users exist, but search query doesn't match any of them -->
+    <div v-else-if="debouncedSearchQuery.length">
+      <h2 class="mb-2 text-xl font-medium">No users found ¯\_(ツ)_/¯</h2>
+    </div>
+
+    <!-- there are no users returned from the API -->
     <div v-else data-testid="empty-user-list">
       <h2 class="mb-2 text-xl font-medium">There are no users yet</h2>
       <p>Feel free to create one</p>
     </div>
-
-    <Teleport to="body">
-      <Transition name="fade">
-        <ModalDialog v-if="isCreateFormVisible" @close="isCreateFormVisible = false">
-          <CreateUserForm
-            :is-loading="createUserLoading"
-            :error="createUserError"
-            @submit="handleUserCreate"
-            @cancel="isCreateFormVisible = false"
-          />
-        </ModalDialog>
-      </Transition>
-    </Teleport>
   </div>
 
   <div v-else-if="getUsersLoading" class="flex justify-center" data-testid="get-users-loading">
@@ -169,6 +164,19 @@ const handleUserDelete = async (id: User['id']) => {
   </div>
 
   <div v-else-if="getUsersError" data-testid="get-users-error">{{ getUsersError }}</div>
+
+  <Teleport to="body">
+    <Transition name="fade">
+      <ModalDialog v-if="isCreateFormVisible" @close="isCreateFormVisible = false">
+        <CreateUserForm
+          :is-loading="createUserLoading"
+          :error="createUserError"
+          @submit="handleUserCreate"
+          @cancel="isCreateFormVisible = false"
+        />
+      </ModalDialog>
+    </Transition>
+  </Teleport>
 </template>
 
 <style scoped>
