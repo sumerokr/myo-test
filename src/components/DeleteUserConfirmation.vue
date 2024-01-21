@@ -4,8 +4,8 @@ import TheButton from './TheButton.vue';
 
 type Props = {
   user: User;
-  isLoading: boolean;
-  error: unknown;
+  isLoading?: boolean;
+  error?: unknown;
 };
 
 defineProps<Props>();

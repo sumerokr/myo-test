@@ -4,8 +4,8 @@ import type { UserDraft } from '@/types';
 import TheButton from '@/components/TheButton.vue';
 
 type Props = {
-  isLoading: boolean;
-  error: unknown;
+  isLoading?: boolean;
+  error?: unknown;
 };
 
 defineProps<Props>();
