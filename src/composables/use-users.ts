@@ -15,7 +15,7 @@ export const useUsers = () => {
   const {
     isLoading: createUserLoading,
     error: createUserError,
-    execute: createUser,
+    execute: executeCreateUser,
   } = useAsyncState((userData: UserDraft) => usersAPI.createUser(userData), null, {
     immediate: false,
     onSuccess: (createdUser) => {
@@ -23,13 +23,18 @@ export const useUsers = () => {
       users.value = users.value.concat(createdUser);
     },
   });
+
+  const createUser = async (userData: UserDraft) => {
+    if (createUserLoading.value) return;
+    await executeCreateUser(0, userData);
+  };
   //#endregion create
 
   //#region update
   const {
     isLoading: updateUserLoading,
     error: updateUserError,
-    execute: updateUser,
+    execute: executeUpdateUser,
   } = useAsyncState((user: User) => usersAPI.updateUser(user), null, {
     immediate: false,
     onSuccess: (updatedUser) => {
@@ -42,13 +47,18 @@ export const useUsers = () => {
       });
     },
   });
+
+  const updateUser = async (user: User) => {
+    if (updateUserLoading.value) return;
+    await executeUpdateUser(0, user);
+  };
   //#endregion edit
 
   //#region delete
   const {
     isLoading: deleteUserLoading,
     error: deleteUserError,
-    execute: deleteUser,
+    execute: executeDeleteUser,
   } = useAsyncState((id: User['id']) => usersAPI.deleteUser(id), null, {
     immediate: false,
     onSuccess: (deletedUser) => {
@@ -56,6 +66,11 @@ export const useUsers = () => {
       users.value = users.value.filter((user) => user.id !== deletedUser.id);
     },
   });
+
+  const deleteUser = async (id: User['id']) => {
+    if (deleteUserLoading.value) return;
+    await executeDeleteUser(0, id);
+  };
   //#endregion delete
 
   return {
@@ -65,23 +80,14 @@ export const useUsers = () => {
 
     createUserLoading,
     createUserError,
-    createUser: async (userData: UserDraft) => {
-      if (createUserLoading.value) return;
-      await createUser(0, userData);
-    },
+    createUser,
 
     updateUserLoading,
     updateUserError,
-    updateUser: async (user: User) => {
-      if (updateUserLoading.value) return;
-      await updateUser(0, user);
-    },
+    updateUser,
 
     deleteUserLoading,
     deleteUserError,
-    deleteUser: async (id: User['id']) => {
-      if (deleteUserLoading.value) return;
-      await deleteUser(0, id);
-    },
+    deleteUser,
   };
 };
