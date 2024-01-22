@@ -29,13 +29,20 @@ onUnmounted(() => {
 
 <template>
   <div
-    class="fixed z-50 inset-0 -top-2 flex items-center justify-center backdrop-blur-[2px] bg-black/30 overflow-auto"
+    class="_overlay fixed z-50 inset-0 grid justify-items-center backdrop-blur-[2px] bg-black/30 overflow-auto"
   >
     <div
-      class="flex-grow m-4 border-2 border-slate-200 rounded-xl max-w-[24rem] p-4 bg-white shadow-xl"
+      class="col-start-2 row-start-2 border-2 border-slate-200 rounded-xl w-full max-w-[24rem] p-4 bg-white shadow-xl"
       ref="dialog"
     >
       <slot />
     </div>
   </div>
 </template>
+
+<style scoped>
+._overlay {
+  grid-template-columns: 1rem 1fr 1rem;
+  grid-template-rows: minmax(1rem, 1fr) 1fr minmax(1rem, 3fr);
+}
+</style>
