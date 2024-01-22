@@ -74,7 +74,7 @@ const localUser = ref<UserDraft>({
 
     <div class="flex justify-between">
       <TheButton type="button" @click="$emit('cancel')">Cancel</TheButton>
-      <TheButton class="border-sky-200" type="submit" :is-loading="isLoading">Save</TheButton>
+      <TheButton class="!border-sky-200" type="submit" :is-loading="isLoading">Save</TheButton>
     </div>
 
     <div class="text-red-500" v-if="error">
