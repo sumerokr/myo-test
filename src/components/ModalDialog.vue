@@ -43,6 +43,6 @@ onUnmounted(() => {
 <style scoped>
 ._overlay {
   grid-template-columns: 1rem 1fr 1rem;
-  grid-template-rows: minmax(1rem, 1fr) 1fr minmax(1rem, 3fr);
+  grid-template-rows: minmax(1rem, 1fr) auto minmax(1rem, 3fr);
 }
 </style>
